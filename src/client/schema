@@ -1,0 +1,30 @@
+Artist
+  id        int
+  name      varchar
+
+Track
+  id        int
+  title     varchar
+  artistId  int    
+
+Bar
+  id        int
+  trackId   int
+  position int
+
+Word
+  id        int
+  value     varchar
+
+BarWord
+  id        int
+  barId     int
+  wordId    int
+  position  int
+
+Rhyme
+  id        int
+  barWordId int
+  syllable  varchar
+  startAt   int
+  parentId  int

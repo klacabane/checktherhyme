@@ -1,0 +1,9 @@
+.word {
+  position: relative;
+  padding: 2px;
+  margin-right: 2px;
+}
+
+.ui.label.edit-word > .icon {
+  margin: 0;
+}
