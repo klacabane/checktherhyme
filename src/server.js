@@ -1,9 +1,8 @@
 import Koa from 'koa';
-import mount from 'koa-mount';
-import send from 'koa-send';
 import Router from 'koa-router';
+import send from 'koa-send';
+
 import db from './server/db';
-import fs from 'fs';
 import genius from './server/genius';
 
 const app = new Koa();
@@ -25,7 +24,7 @@ api.get('/search/track/:term', async (ctx, next) => {
 });
 
 api.get('/track/:id', async (ctx, next) => {
-  ctx.body = await genius.getLyrics('https://genius.com/Maxo-kream-grannies-lyrics');
+  ctx.body = await genius.getLyrics('https://genius.com/Cousin-stizz-no-explanation-lyrics');
 });
 
 router.use('/api', api.routes(), api.allowedMethods());

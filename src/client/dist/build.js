@@ -45,6 +45,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
+	__webpack_require__(319);
 	module.exports = __webpack_require__(7);
 
 
@@ -1712,30 +1713,80 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var lyrics = "Wake up in the morning load my pistol can't leave home without it\n" + "Come from where you see a lot of bodies but don't talk about it\n" + "Hard to find the plug I middleman that package on consignment\n" + "Hookers, strippers, crackheads, robbers, trappers all in public housing\n" + "Uncle Bo was stealing from my granny can't leave shit around here\n" + "Roaches, rats, and ants inside my pantry can't leave food around here\n" + "Aunty Trish was sleep', I stole her car and when I'm servin', robbin'\n" + "Grinding with my family through the struggle hold 'em down regardless\n" + "Mama daddy kicked me out at fifteen while I'm renegading\n" + "Moved into appartments with my granny started going crazy\n" + "Then my brother Ju moved in he fresh up out the penitentiary\n" + "Whooped my ass he made me to a man I slanged his crack in vacants\n" + "Aunty Trish was smoking on my weed she used to work my patience\n" + "Every night I sneak out pull her keys out I'm driving paper chasing\n" + "One night we robbed the Asian lady let the police on pursuit\n" + "GD Cory riding with me let the shots go through the roof\n" + "Two days later HPD pulled up and questioned aunty Trish\n" + "She knew I took her car and hit a lick but she ain't tell 'em shit\n" + "They searched her car and let her go they almost charged her for a grammy\n" + "Never snitch betrayed the family but she always told my granny\n" + "My granny' oldest son is Alvin Jr. call him Uncle Main\n" + "That's my favorite uncle on occasion he smoke crack cocaine\n" + "Petty, thief and junkie but he always had my most respect\n" + "When I was six I've seen him stab a nigga and he bled to death\n" + "Wake up in the morning load my pistol can't leave home without it\n" + "Come from where you see a lot of bodies but don't talk about it\n" + "Hard to find the plug I middleman that package on consignment\n" + "Hookers, strippers, crackheads, robbers, trappers all in public housing\n" + "Uncle Bo was stealing from my granny can't leave shit around here\n" + "Roaches, rats, and ants inside my pantry can't leave food around here\n" + "Aunty Trish was sleep', I stole her car and when I'm servin', robbin'\n" + "Grinding with my family through the struggle hold 'em down regardless\n" + "My uncle Bo my granny youngest son he always doing extra\n" + "Moved in for the summer he was tired of living in a shelter\n" + "Up all night and sleep all day you never know his sleeping schedule\n" + "Gotta hide my money dope and clothes that nigga steal whatever\n" + "Bo was damn near 50 posted on the block with all the youngsters\n" + "He too old for that my granny said the streets gone' take him under\n" + "Always hitting places when I'm jugging with my older brother\n" + "Till he lost his life they shot him twice he tried to take some bundles\n" + "My cousin Pooh was Auntie's older son that nigga never listened\n" + "Gender with them pigeons he got sentenced 42 in prison\n" + "Certified killer he the reason why I started Crippin'\n" + "Aggravated, robbing, stealing, killing even shot some bitches\n" + "He turned me to a shooter said nobody gonna blast it for me\n" + "Pooh he was a savage uncle Bo he raised a crash dummy\n" + "When I was twelve he got me high my first time ever smoking grass\n" + "He caught his girlfriend cheating grabbed the Glock and shot 'er in her ass\n" + "Wake up in the morning load my pistol can't leave home without it\n" + "Come from where you see a lot of bodies but don't talk about it\n" + "Hard to find the plug I middleman that package on consignment\n" + "Hookers, strippers, crackheads, robbers, trappers all in public housing\n" + "Uncle Bo was stealing from my granny can't leave shit around here\n" + "Roaches, rats, and ants inside my pantry can't leave food around here\n" + "Aunty Trish was sleep', I stole her car and when I'm servin', robbin'\n" + "Grinding with my family through the struggle hold 'em down regardless";
-
-	var bars = lyrics.split('\n').map(function (bar, i) {
-	  return { index: i + 1, time: 12.0, words: bar.split(' ') };
-	});
-
 	var isBefore = _ramda2.default.filter(function (w) {
 	  return w.time <= update.time;
 	});
 
-	var timeline = [{ line: 1, word: 'Wake', time: 12.3 }, { line: 1, word: 'up', time: 12.5 }, { line: 1, word: 'in', time: 12.7 }, { line: 1, word: 'the', time: 12.9 }, { line: 1, word: 'morning', time: 13.1 }, { line: 1, word: 'load', time: 13.3 }, { line: 1, word: 'my', time: 13.6 }, { line: 1, word: 'pistol', time: 13.9 }, { line: 1, word: 'can\'t', time: 14.1 }, { line: 1, word: 'leave', time: 14.3 }, { line: 1, word: 'home', time: 14.6 }, { line: 1, word: 'without', time: 14.8 }, { line: 1, word: 'it', time: 14.9 }, { line: 2, word: 'Come', time: 15.4 }];
-
-	/**
-	 * Init body with lyrics by putting the first line in the middle of the container.
-	 * On audio progress (while player.playing => requestAnimationFrame loop do => read player.currentTime):
-	 *  - Highlight the current word if any
-	 *  - Display the word's line at the center of the screen
-	 */
 	exports.default = {
 	  oninit: function oninit() {
-	    this.words = [];
-	  },
-	  wordItem: function wordItem(word) {
-	    console.log(this);
+	    var _this = this;
+
+	    this.lyrics = [];
+
+	    _mithril2.default.request({
+	      url: '/api/track/2',
+	      background: true
+	    }).then(function (lyrics) {
+	      _this.lyrics = lyrics;
+	      _mithril2.default.redraw();
+	    });
+
+	    this.selections = {};
+
+	    this.insertSelection = function (node, start, len, content) {
+	      var dataset = node.dataset;
+	      var wordIndex = dataset.wordIndex;
+	      var barIndex = dataset.barIndex;
+	      var sectionIndex = dataset.sectionIndex;
+
+	      if (!_this.selections[sectionIndex]) _this.selections[sectionIndex] = {};
+	      if (!_this.selections[sectionIndex][barIndex]) _this.selections[sectionIndex][barIndex] = {};
+	      if (!_this.selections[sectionIndex][barIndex][wordIndex]) _this.selections[sectionIndex][barIndex][wordIndex] = [];
+
+	      var selection = {
+	        start: start,
+	        len: len,
+	        content: content || node.textContent.trim()
+	      };
+
+	      _this.selections[sectionIndex][barIndex][wordIndex].push(selection);
+	    };
+
+	    document.addEventListener('mouseup', function (e) {
+	      var selection = document.getSelection();
+	      var range = selection.getRangeAt(0);
+	      if (!range.toString()) return;
+
+	      if (range.startContainer === range.endContainer) {
+	        _this.insertSelection(range.startContainer.parentNode, range.startOffset, range.endOffset - range.startOffset, range.toString());
+	      } else {
+	        var wrapper = range.commonAncestorContainer.className;
+	        var children = range.cloneContents().children;
+	        if (wrapper === 'bar') {
+	          for (var i = 0; i < children.length; i++) {
+	            var word = children.item(i);
+	            var start = i === 0 ? range.startOffset : 0;
+	            var len = i === children.length - 1 ? range.endOffset - start : word.textContent.length;
+	            _this.insertSelection(word, start, len);
+	          }
+	        } else {
+	          for (var _i = 0; _i < children.length; _i++) {
+	            var bar = children.item(_i);
+	            if (bar.className !== 'bar') continue;
+
+	            for (var j = 0; j < bar.childNodes.length; j++) {
+	              var _word = bar.childNodes.item(j);
+	              var _start = _i === 0 && j === 0 ? range.startOffset : 0;
+	              var _len = _i === children.length - 1 && j === bar.childNodes.length - 1 ? range.endOffset - _start : _word.textContent.length;
+	              _this.insertSelection(_word, _start, _len);
+	            }
+	          }
+	        }
+	      }
+
+	      selection.empty();
+	      _mithril2.default.redraw();
+	    });
 	  },
 	  view: function view(vnode) {
 	    return (0, _mithril2.default)('.ui.grid', [(0, _mithril2.default)('audio#audioplayer', {
@@ -1744,7 +1795,7 @@
 
 	        vnode.state.player = new _audioplayer2.default(dom);
 
-	        vnode.state.subscription = vnode.state.player.init('/dist/audio.mkv').subscribe(function (update) {
+	        vnode.state.subscription = vnode.state.player.init('/dist/no-explanation.mkv').subscribe(function (update) {
 	          vnode.state.words = timeline.filter(function (w) {
 	            return w.time <= update.time;
 	          });
@@ -1757,22 +1808,29 @@
 	      onremove: function onremove() {
 	        vnode.state.subscription.dispose();
 	      }
-	    }), (0, _mithril2.default)('.row', { style: { height: '50px' } }), (0, _mithril2.default)('.three.column.row', [(0, _mithril2.default)('.four.wide.column'), (0, _mithril2.default)('.eight.wide.column', { style: { fontSize: '1.1em' } }, (0, _mithril2.default)('.ui.list', bars.map(function (bar) {
-	      return (0, _mithril2.default)('.item', { style: { lineHeight: '1.6rem' } }, bar.words.map(function (word) {
-	        var selected = vnode.state.words.find(function (w) {
-	          return w.word === word && w.line === bar.index;
-	        });
-	        return (0, _mithril2.default)('span.word', {
-	          style: {
-	            background: selected ? 'red' : 'white',
-	            color: selected ? 'white' : 'black'
-	          },
-
-	          onmouseup: function onmouseup() {
-	            console.log({ line: bar.index, word: word, time: vnode.state.player.dom.currentTime });
+	    }), (0, _mithril2.default)('.row', { style: { height: '50px' } }), (0, _mithril2.default)('.three.column.row', [(0, _mithril2.default)('.four.wide.column'), (0, _mithril2.default)('.eight.wide.column', (0, _mithril2.default)('.ui.list', vnode.state.lyrics.map(function (section, sectionIndex) {
+	      return (0, _mithril2.default)('.section', { 'data-section-index': sectionIndex }, [(0, _mithril2.default)('div', section.type), section.bars.map(function (bar, barIndex) {
+	        return [(0, _mithril2.default)('.bar', { 'data-bar-index': barIndex }, bar.raw.split(' ').map(function (word, wordIndex) {
+	          var element = void 0;
+	          if (vnode.state.selections[sectionIndex] && vnode.state.selections[sectionIndex][barIndex]) {
+	            var selections = vnode.state.selections[sectionIndex][barIndex][wordIndex];
+	            if (!selections) {
+	              element = word;
+	            } else {
+	              var selection = selections[0];
+	              element = _mithril2.default.trust(word.substr(0, selection.start) + '<span style="background: red;">' + word.substr(selection.start, selection.len) + '</span>' + word.substr(selection.start + selection.content.length));
+	            }
+	          } else {
+	            element = _mithril2.default.trust(word);
 	          }
-	        }, (0, _mithril2.default)('span', word));
-	      }));
+
+	          return (0, _mithril2.default)('span.word', {
+	            'data-word-index': wordIndex, style: { marginRight: '4px' },
+	            'data-bar-index': barIndex,
+	            'data-section-index': sectionIndex
+	          }, element);
+	        })), (0, _mithril2.default)('br')];
+	      })]);
 	    }))), (0, _mithril2.default)('.four.wide.column')])]);
 	  }
 	};
@@ -25829,6 +25887,33 @@
 	}.call(this));
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)(module), (function() { return this; }()), __webpack_require__(5)))
+
+/***/ },
+/* 319 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _ramda = __webpack_require__(8);
+
+	var _ramda2 = _interopRequireDefault(_ramda);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	/**
+	 * attrs:
+	 *  isVisible {bool}
+	 *  fragment  {string}
+	 */
+	exports.default = {
+	  view: function view(vnode) {
+	    return m('.rhyme-editor', []);
+	  }
+	};
 
 /***/ }
 /******/ ]);

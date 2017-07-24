@@ -1,9 +1,15 @@
-.word {
-  position: relative;
-  padding: 2px;
-  margin-right: 2px;
+.section {
+  margin-bottom: 1rem;
 }
 
-.ui.label.edit-word > .icon {
-  margin: 0;
+.bar {
+  font-size: 1.225em;
+  line-height: 2rem;
+  letter-spacing: .4px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.word {
+  cursor: pointer;
 }
